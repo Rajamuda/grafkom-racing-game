@@ -2,7 +2,7 @@ void putTree(float x,float y, float z, float scale){
     glPushMatrix();
         glTranslatef(x,y,z);
         glScalef(1,scale,1);
-        glmDraw(tree1, GLM_SMOOTH|GLM_MATERIAL);
+        glmDraw(tree2, GLM_SMOOTH|GLM_MATERIAL);
     glPopMatrix();
 }
 
@@ -20,6 +20,7 @@ void drawSidewalk(float x0, float y0, float z0, float p0, float l0, float t0, fl
             glVertex3f(x0+l0,y0+t0,z0);
         glEnd();
         glDisable(GL_TEXTURE_2D);
+        glColor3ub(103,95,80);
         glBegin(GL_POLYGON);
             glVertex3f(x0,y0,z0);
             glVertex3f(x0,y0+t0,z0);
@@ -44,11 +45,14 @@ void drawSidewalk(float x0, float y0, float z0, float p0, float l0, float t0, fl
             glVertex3f(x0+l0,y0+t0,z0+p0);
             glVertex3f(x0+l0,y0,z0+p0);
         glEnd();
+        glColor3ub(255,255,255);
 }
 
 void loadArea(){
     glColor3f(1,1,1);
-    grid_floor(1500,1500);
+//    grid_floor(1500,1500);
+    line.setArena(-10,10,-20,-10,1.025,F_LINE,5);
+    line.drawArena(1);
 
     /* -------------------- 1 ------------------------ */
     jalanan[0].setArena(-10,10,-10,-480,1,1,25);

@@ -9,8 +9,8 @@ class Mobil{
     float acceleration;
     float breaking;
     float speed;
+    int lap;
     GLMmodel* model;
-
 
     public:
         Mobil(){
@@ -19,6 +19,7 @@ class Mobil{
             maxspeed = 0.0;
             acceleration: 0.0;
             speed = 0.0;
+            lap = 0;
             model = NULL;
         }
 
@@ -42,6 +43,14 @@ class Mobil{
                 glScalef(1/this->p,1/this->l,1/this->t);
                 glmDraw(this->model, GLM_SMOOTH|GLM_MATERIAL);
             glPopMatrix();
+        }
+
+        void setLap(int lap){
+            this->lap = lap;
+        }
+
+        int getLap(){
+            return this->lap;
         }
 
         float getMaxSpeed(){
@@ -79,7 +88,66 @@ class Mobil{
 
 class Arena{
     //for map area
+    std::map<std::string, float> area;
+    float ketinggian;
+    float texDensity;
+    int textureID;
+
+    public:
+        Arena(){
+            area.clear();
+            ketinggian = texDensity = 0.0;
+            textureID = 0;
+        }
+
+        void setArena(float x0, float x1, float z0, float z1, float tinggi, int texID, float dens){
+            area["x0"] = x0;
+            area["x1"] = x1;
+            area["z0"] = z0;
+            area["z1"] = z1;
+            ketinggian = tinggi;
+            textureID = texID;
+            texDensity = dens;
+        }
+
+        void drawArena(int rev){
+            if(rev==0){
+                glEnable(GL_TEXTURE_2D);
+                glBindTexture (GL_TEXTURE_2D, this->textureID);
+                glBegin(GL_POLYGON);
+                    glTexCoord2f(0,0);
+                    glVertex3f(this->area["x1"],this->ketinggian,this->area["z1"]);
+                    glTexCoord2f(1,0);
+                    glVertex3f(this->area["x0"],this->ketinggian,this->area["z1"]);
+                    glTexCoord2f(1,this->texDensity);
+                    glVertex3f(this->area["x0"],this->ketinggian,this->area["z0"]);
+                    glTexCoord2f(0,this->texDensity);
+                    glVertex3f(this->area["x1"],this->ketinggian,this->area["z0"]);
+                glEnd();
+                glDisable(GL_TEXTURE_2D);
+            }else if(rev==1){
+                glEnable(GL_TEXTURE_2D);
+                glBindTexture (GL_TEXTURE_2D, this->textureID);
+                glBegin(GL_POLYGON);
+                    glTexCoord2f(0,0);
+                    glVertex3f(this->area["x1"],this->ketinggian,this->area["z1"]);
+                    glTexCoord2f(1,0);
+                    glVertex3f(this->area["x1"],this->ketinggian,this->area["z0"]);
+                    glTexCoord2f(1,this->texDensity);
+                    glVertex3f(this->area["x0"],this->ketinggian,this->area["z0"]);
+                    glTexCoord2f(0,this->texDensity);
+                    glVertex3f(this->area["x0"],this->ketinggian,this->area["z1"]);
+                glEnd();
+                glDisable(GL_TEXTURE_2D);
+            }
+        }
+
+        std::map<std::string, float> getArena(){
+            return area;
+        }
 };
 
 // OBJECT DECLARATION
 Mobil *mobil = new Mobil[MAX_P];
+Arena *jalanan = new Arena[MAX_J];
+Arena line; //start/finish Line,

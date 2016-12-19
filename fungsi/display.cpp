@@ -1,4 +1,4 @@
-void printTxt(int x, int y,int z, char *string){
+void printTxt(int x, int y,int z, char *string, int info){
     //set the position of the text in the window using the x and y coordinates
     glWindowPos2i(x,y);
     //get the length of the string to display
@@ -10,25 +10,42 @@ void printTxt(int x, int y,int z, char *string){
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,string[i]);
     }
 
-    char tx[] = " Km/h";
-    len = (int) strlen(tx);
-    for (int i=0; i < len; i++ )
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, tx[i]);
+    if(info == 0){
+        char tx[] = " Km/h";
+        len = (int) strlen(tx);
+        for (int i=0; i < len; i++ )
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, tx[i]);
+    }else if(info == 1){
+        char tx[] = " of 2";
+        len = (int) strlen(tx);
+        for (int i=0; i < len; i++ )
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, tx[i]);
+    }
 }
 
 void display(){
-
-    if(posZAI <= -500)
+    if(posZAI <= -485)
         posZAI = 500;
 
     char txt1[] = "Speed: ";
     char txtBuff[10];
-    std::map<std::string, float> theMap;
-
-
     snprintf(txtBuff,sizeof(txtBuff),"%.2f",(mobil[0].getSpeed(1)));
     strcat(txt1, txtBuff);
-    printTxt(100,60,10, txt1);
+    printTxt(100,60,10, txt1,0);
+
+
+    char txt2[] = "Lap: ";
+    char txtBuff2[2];
+    snprintf(txtBuff2,sizeof(txtBuff2),"%d",(mobil[0].getLap()));
+    strcat(txt2,txtBuff2);
+    printTxt(1100,60,10,txt2,1);
+
+    glPushMatrix();
+        putTree(12,4,-12,2.4);
+        putTree(-12,4,-12,2.4);
+        putTree(-12,4,12,2.4);
+        putTree(12,4,12,2.4);
+    glPopMatrix();
 
     mobil[0].setMobil(1.4,1.0,1.0,1.4,2.0,50,2.88,porscheR); //scaleX, scaleY, scaleZ, weight(ton), accel (m/s^2), maxspeed(m/s), breaking(percentage),model
     mobil[0].setLocation(x+lx,2.0,z+lz,ax);
@@ -37,10 +54,8 @@ void display(){
     mobil[1].setLocation(0.0,1.0,posZAI,0);
 
 
-    putTree(12,4,-12,2.4);
-//    putTree(-12,4,-12,2.4);
-//    putTree(-12,4,12,2.4);
-//    putTree(12,4,12,2.4);
+    lighting2();
+
 
     cekbtn();
 }

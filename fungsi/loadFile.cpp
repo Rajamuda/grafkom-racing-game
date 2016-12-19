@@ -6,61 +6,20 @@
 #define SKYUP    7
 #define SKYDOWN  8
 
+#define NEW_GAME 11
+#define ABOUT    12
+#define EXIT     13
+#define CONTINUE 19
+#define EXIT_C   20
+
+#define F_LINE   21
+
+
 GLMmodel* porsche = NULL;
 GLMmodel* tank = NULL;
 GLMmodel* porscheR = NULL;
 GLMmodel* tree1 = NULL;
 GLMmodel* tree2 = NULL;
-
-void load_bmp(char *filename, unsigned int texture_id) {
-
-    FILE *file;
-    short int bpp;
-    short int planes;
-    long size;
-
-    long imwidth;
-    long imheight;
-    char *imdata;
-
-    if (!(file = fopen(filename, "rb"))) {
-        fprintf(stderr, "Error: file %s not found!\n", filename);
-    };
-    fseek(file, 18, SEEK_CUR);
-
-    fread(&imwidth, 4, 1, file);
-    fread(&imheight, 4, 1, file);
-    size = imwidth * imheight * 3;
-
-    fread(&bpp, 2, 1, file);
-    fread(&planes, 2, 1, file);
-
-    fseek(file, 24, SEEK_CUR);
-    imdata = (char *)malloc(size);
-
-    fread(imdata, size, 1, file);
-
-	char temp;
-    for(long i = 0; i < size; i+=3){
-        temp = imdata[i];
-        imdata[i] = imdata[i+2];
-        imdata[i+2] = temp;
-    }
-
-    fclose(file);
-
-    glBindTexture(GL_TEXTURE_2D, texture_id); // now we bind the texture that we are working with
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imwidth, imheight, 0, GL_RGB, GL_UNSIGNED_BYTE, imdata);
-
-    free(imdata); // free the texture
-}
 
 void glTga(void){
     glEnable (GL_DEPTH_TEST);
@@ -76,15 +35,54 @@ void glTga(void){
 //    loadTGA("texture/skybox/sincity_rt.tga",SKYRIGHT);
 //    loadTGA("texture/skybox/sincity_up.tga",SKYUP);
 //    loadTGA("texture/skybox/sincity_dn.tga",SKYDOWN);
-    loadTGA("texture/skybox2/hills_ft.tga",SKYFRONT);
-    loadTGA("texture/skybox2/hills_bk.tga",SKYBACK);
-    loadTGA("texture/skybox2/hills_lf.tga",SKYLEFT);
-    loadTGA("texture/skybox2/hills_rt.tga",SKYRIGHT);
-    loadTGA("texture/skybox2/hills_up.tga",SKYUP);
-    loadTGA("texture/skybox2/hills_dn.tga",SKYDOWN);
+    loadTGA("texture/skybox2/deception_pass_ft.tga",SKYFRONT);
+    loadTGA("texture/skybox2/deception_pass_bk.tga",SKYBACK);
+    loadTGA("texture/skybox2/deception_pass_lf.tga",SKYLEFT);
+    loadTGA("texture/skybox2/deception_pass_rt.tga",SKYRIGHT);
+    loadTGA("texture/skybox2/deception_pass_up.tga",SKYUP);
+    loadTGA("texture/skybox2/deception_pass_dn.tga",SKYDOWN);
 
     loadTGA("texture/splash_load.tga",9);
     loadTGA("texture/bahujalan.tga",10);
+
+    loadTGA("texture/menu/menu1.tga", NEW_GAME);
+    loadTGA("texture/menu/menu2.tga", ABOUT);
+    loadTGA("texture/menu/menu3.tga", EXIT);
+    loadTGA("texture/menu/menuO1.tga", CONTINUE);
+    loadTGA("texture/menu/menuO2.tga", EXIT_C);
+
+    loadTGA("texture/count/GO.tga", 14);
+    loadTGA("texture/count/1.tga", 15);
+    loadTGA("texture/count/2.tga", 16);
+    loadTGA("texture/count/3.tga", 17);
+    loadTGA("texture/count/4.tga", 18);
+
+    loadTGA("texture/garis.tga", F_LINE);
+}
+
+void loadMenu(){
+    glEnable(GL_TEXTURE_2D);
+    if(screenState == 0)
+        glBindTexture(GL_TEXTURE_2D, NEW_GAME);
+    else if(screenState == 1)
+        glBindTexture(GL_TEXTURE_2D, ABOUT);
+    else if(screenState == 2)
+        glBindTexture(GL_TEXTURE_2D, EXIT);
+    else if(screenState == 5)
+        glBindTexture(GL_TEXTURE_2D, CONTINUE);
+    else if(screenState == 6)
+        glBindTexture(GL_TEXTURE_2D, EXIT_C);
+    glBegin(GL_POLYGON);
+        glTexCoord2f(0, 0);
+		glVertex3f(-1024/1.5, -1024/2.75, 0);
+		glTexCoord2f(1, 0);
+		glVertex3f(1024/1.5, -1024/2.75, 0);
+		glTexCoord2f(1, 1);
+		glVertex3f(1024/1.5, 1024/2.75, 0);
+		glTexCoord2f(0, 1);
+		glVertex3f(-1024/1.5, 1024/2.75, 0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void loadingScreen(){
@@ -141,224 +139,4 @@ void grid_floor(int baris, int kolom) {
     }
 
     glEnd();
-}
-
-void putTree(float x,float y, float z, float scale){
-    glPushMatrix();
-        glTranslatef(x,y,z);
-        glScalef(1,scale,1);
-        glmDraw(tree1, GLM_SMOOTH|GLM_MATERIAL);
-    glPopMatrix();
-}
-
-void drawSidewalk(float x0, float y0, float z0, float p0, float l0, float t0, float xtex, float ztex){
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D,10);
-        glBegin(GL_POLYGON);
-            glTexCoord2f(0,0);
-            glVertex3f(x0+l0,y0+t0,z0+p0);
-            glTexCoord2f(xtex,0);
-            glVertex3f(x0,y0+t0,z0+p0);
-            glTexCoord2f(xtex,ztex);
-            glVertex3f(x0,y0+t0,z0);
-            glTexCoord2f(0,ztex);
-            glVertex3f(x0+l0,y0+t0,z0);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-        glBegin(GL_POLYGON);
-            glVertex3f(x0,y0,z0);
-            glVertex3f(x0,y0+t0,z0);
-            glVertex3f(x0,y0+t0,z0+p0);
-            glVertex3f(x0,y0,z0+p0);
-        glEnd();
-        glBegin(GL_POLYGON);
-            glVertex3f(x0,y0,z0);
-            glVertex3f(x0,y0+t0,z0);
-            glVertex3f(x0+l0,y0+t0,z0);
-            glVertex3f(x0+l0,y0,z0);
-        glEnd();
-        glBegin(GL_POLYGON);
-            glVertex3f(x0+l0,y0,z0);
-            glVertex3f(x0+l0,y0+t0,z0);
-            glVertex3f(x0+l0,y0+t0,z0+p0);
-            glVertex3f(x0+l0,y0,z0+p0);
-        glEnd();
-        glBegin(GL_POLYGON);
-            glVertex3f(x0,y0,z0+p0);
-            glVertex3f(x0,y0+t0,z0+p0);
-            glVertex3f(x0+l0,y0+t0,z0+p0);
-            glVertex3f(x0+l0,y0,z0+p0);
-        glEnd();
-}
-
-void loadArea(){
-    glColor3f(1,1,1);
-    grid_floor(1000,1000);
-//    glPushMatrix();
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture (GL_TEXTURE_2D, 1);
-        glBegin(GL_POLYGON);
-            glTexCoord2f(0,0);
-            glVertex3f(10,1,-500);
-            glTexCoord2f(1,0);
-            glVertex3f(-10,1,-500);
-            glTexCoord2f(1,25);
-            glVertex3f(-10,1,-10);
-            glTexCoord2f(0,25);
-            glVertex3f(10,1,-10);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-//    glPopMatrix();
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture (GL_TEXTURE_2D, 1);
-        glBegin(GL_POLYGON);
-            glTexCoord2f(0,0);
-            glVertex3f(10,1,10);
-            glTexCoord2f(1,0);
-            glVertex3f(-10,1,10);
-            glTexCoord2f(1,25);
-            glVertex3f(-10,1,500);
-            glTexCoord2f(0,25);
-            glVertex3f(10,1,500);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-
-        /* begin Persimpangan */
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture (GL_TEXTURE_2D, 2);
-        glBegin(GL_POLYGON);
-            glTexCoord2f(0,0);
-            glVertex3f(10,1,-10);
-            glTexCoord2f(1,0);
-            glVertex3f(-10,1,-10);
-            glTexCoord2f(1,1);
-            glVertex3f(-10,1,10);
-            glTexCoord2f(0,1);
-            glVertex3f(10,1,10);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-        /* end Persimpangan */
-
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture (GL_TEXTURE_2D, 1);
-        glBegin(GL_POLYGON);
-            glTexCoord2f(0,0);
-            glVertex3f(500,1,-10);
-            glTexCoord2f(1,0);
-            glVertex3f(500,1,10);
-            glTexCoord2f(1,25);
-            glVertex3f(10,1,10);
-            glTexCoord2f(0,25);
-            glVertex3f(10,1,-10);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture (GL_TEXTURE_2D, 1);
-        glBegin(GL_POLYGON);
-            glTexCoord2f(0,0);
-            glVertex3f(-500,1,-10);
-            glTexCoord2f(1,0);
-            glVertex3f(-500,1,10);
-            glTexCoord2f(1,25);
-            glVertex3f(-10,1,10);
-            glTexCoord2f(0,25);
-            glVertex3f(-10,1,-10);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-
-        drawSidewalk(10,1,-10,-490,5,0.25,1,75);
-        drawSidewalk(-10,1,-10,-490,-5,0.25,1,75);
-        drawSidewalk(-10,1,10,490,-5,0.25,1,75);
-        drawSidewalk(10,1,10,490,5,0.25,1,75);
-        drawSidewalk(15,1,-15,5,485,0.25,75,1);
-        drawSidewalk(-15,1,-15,5,-485,0.25,75,1);
-        drawSidewalk(15,1,15,-5,485,0.25,75,1);
-        drawSidewalk(-15,1,15,-5,-485,0.25,75,1);
-//        glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void drawSkybox(float size){
-    size = -size;
-    float sizeX = -size;
-    float sizeZ = -size;
-    bool b1=glIsEnabled(GL_TEXTURE_2D);	//new, we left the textures turned on, if it was turned on
-	glDisable(GL_LIGHTING);	//turn off lighting, when making the skybox
-	glDisable(GL_DEPTH_TEST);	//turn off depth texting
-	glEnable(GL_TEXTURE_2D);	//and turn on texturing
-	glBindTexture(GL_TEXTURE_2D,SKYBACK);	//use the texture we want
-	glBegin(GL_QUADS);	//and draw a face
-		//back face
-		glTexCoord2f(0,0);	//use the correct texture vector3d
-		glVertex3f(sizeX/2,size/2,sizeZ/2);	//and a vertex
-		glTexCoord2f(1,0);	//and repeat it...
-		glVertex3f(-sizeX/2,size/2,sizeZ/2);
-		glTexCoord2f(1,1);
-		glVertex3f(-sizeX/2,-size/2,sizeZ/2);
-		glTexCoord2f(0,1);
-		glVertex3f(sizeX/2,-size/2,sizeZ/2);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D,SKYRIGHT);
-	glBegin(GL_QUADS);
-		//left face
-		glTexCoord2f(0,0);
-		glVertex3f(-sizeX/2,size/2,sizeZ/2);
-		glTexCoord2f(1,0);
-		glVertex3f(-sizeX/2,size/2,-sizeZ/2);
-		glTexCoord2f(1,1);
-		glVertex3f(-sizeX/2,-size/2,-sizeZ/2);
-		glTexCoord2f(0,1);
-		glVertex3f(-sizeX/2,-size/2,sizeZ/2);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D,SKYFRONT);
-	glBegin(GL_QUADS);
-		//front face
-		glTexCoord2f(1,0);
-		glVertex3f(sizeX/2,size/2,-sizeZ/2);
-		glTexCoord2f(0,0);
-		glVertex3f(-sizeX/2,size/2,-sizeZ/2);
-		glTexCoord2f(0,1);
-		glVertex3f(-sizeX/2,-size/2,-sizeZ/2);
-		glTexCoord2f(1,1);
-		glVertex3f(sizeX/2,-size/2,-sizeZ/2);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D,SKYLEFT);
-	glBegin(GL_QUADS);
-		//right face
-		glTexCoord2f(0,0);
-		glVertex3f(sizeX/2,size/2,-sizeZ/2);
-		glTexCoord2f(1,0);
-		glVertex3f(sizeX/2,size/2,sizeZ/2);
-		glTexCoord2f(1,1);
-		glVertex3f(sizeX/2,-size/2,sizeZ/2);
-		glTexCoord2f(0,1);
-		glVertex3f(sizeX/2,-size/2,-sizeZ/2);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D,SKYDOWN);
-	glBegin(GL_QUADS);			//top face
-		glTexCoord2f(1,0);
-		glVertex3f(sizeX/2,size/2,sizeZ/2);
-		glTexCoord2f(0,0);
-		glVertex3f(-sizeX/2,size/2,sizeZ/2);
-		glTexCoord2f(0,1);
-		glVertex3f(-sizeX/2,size/2,-sizeZ/2);
-		glTexCoord2f(1,1);
-		glVertex3f(sizeX/2,size/2,-sizeZ/2);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D,SKYUP);
-	glBegin(GL_QUADS);
-		//bottom face
-		glTexCoord2f(1,1);
-		glVertex3f(sizeX/2,-size/2,sizeZ/2);
-		glTexCoord2f(0,1);
-		glVertex3f(-sizeX/2,-size/2,sizeZ/2);
-		glTexCoord2f(0,0);
-		glVertex3f(-sizeX/2,-size/2,-sizeZ/2);
-		glTexCoord2f(1,0);
-		glVertex3f(sizeX/2,-size/2,-sizeZ/2);
-	glEnd();
-	glEnable(GL_LIGHTING);	//turn everything back, which we turned on, and turn everything off, which we have turned on.
-	glEnable(GL_DEPTH_TEST);
-	if(!b1)
-		glDisable(GL_TEXTURE_2D);
 }

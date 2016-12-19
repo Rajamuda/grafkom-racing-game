@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
-#include <gl/gl.h>
 
 GLenum texFormat;
 
@@ -16,10 +14,10 @@ Make sure its a power of 2.
 */
 int checkSize (int x)
 {
-    if (x == 2	 || x == 4 || 
-        x == 8	 || x == 16 || 
+    if (x == 2	 || x == 4 ||
+        x == 8	 || x == 16 ||
         x == 32  || x == 64 ||
-        x == 128 || x == 256 || x == 512)
+        x == 128 || x == 256 || x == 512 || x == 1024)
         return 1;
     else return 0;
 }
@@ -27,7 +25,7 @@ int checkSize (int x)
 =============
 getRGBA
 
-Reads in RGBA data for a 32bit image. 
+Reads in RGBA data for a 32bit image.
 =============
 */
 unsigned char *getRGBA (FILE *s, int size)
@@ -37,12 +35,12 @@ unsigned char *getRGBA (FILE *s, int size)
     int bread;
     int i;
 
-    rgba = (unsigned char*)malloc (size * 4); 
+    rgba = (unsigned char*)malloc (size * 4);
 
     if (rgba == NULL)
         return 0;
 
-    bread = fread (rgba, sizeof (unsigned char), size * 4, s); 
+    bread = fread (rgba, sizeof (unsigned char), size * 4, s);
 
     /* TGA is stored in BGRA, make it RGBA */
     if (bread != size * 4)
@@ -65,7 +63,7 @@ unsigned char *getRGBA (FILE *s, int size)
 =============
 getRGB
 
-Reads in RGB data for a 24bit image. 
+Reads in RGB data for a 24bit image.
 =============
 */
 unsigned char *getRGB (FILE *s, int size)
@@ -75,7 +73,7 @@ unsigned char *getRGB (FILE *s, int size)
     int bread;
     int i;
 
-    rgb = (unsigned char*)malloc (size * 3); 
+    rgb = (unsigned char*)malloc (size * 3);
 
     if (rgb == NULL)
         return 0;
@@ -141,7 +139,7 @@ unsigned char *getData (FILE *s, int sz, int iBits)
     if (iBits == 32)
         return getRGBA (s, sz);
     else if (iBits == 24)
-        return getRGB (s, sz);	
+        return getRGB (s, sz);
     else if (iBits == 8)
         return getGray (s, sz);
 }
@@ -160,7 +158,7 @@ int returnError (FILE *s, int error)
 =============
 loadTGA
 
-Loads up a targa file.  Supported types are 8,24 and 32 uncompressed images.  
+Loads up a targa file.  Supported types are 8,24 and 32 uncompressed images.
 id is the texture ID to bind too.
 =============
 */
@@ -183,11 +181,11 @@ int loadTGA (char *name, int id)
     if (type[1] != 0 || (type[2] != 2 && type[2] != 3))
         returnError (s, TGA_BAD_IMAGE_TYPE);
 
-    imageWidth = info[0] + info[1] * 256; 
+    imageWidth = info[0] + info[1] * 256;
     imageHeight = info[2] + info[3] * 256;
-    imageBits =	info[4]; 
+    imageBits =	info[4];
 
-    size = imageWidth * imageHeight; 
+    size = imageWidth * imageHeight;
 
     /* make sure dimension is a power of 2 */
     if (!checkSize (imageWidth) || !checkSize (imageHeight))
