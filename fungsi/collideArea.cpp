@@ -1,5 +1,6 @@
 #define ADD 5.5
 bool sudahLewat = false;
+bool sudahLewat2 = false;
 
 bool collideArea(float xA, float yA, float zA){
     bool isCollide = true;
@@ -24,22 +25,29 @@ bool collideArea(float xA, float yA, float zA){
 
 }
 
-bool checkFinish(float xA, float yA, float zA){
+bool checkFinish(float xA, float yA, float zA, int id){
     std::map<std::string, float> theLine = line.getArena();
 
     if(xA<=theLine["x1"] && xA>=theLine["x0"] && zA<=(-1*theLine["z0"]) && zA>=(-1*theLine["z1"])){
-        sudahLewat = false;
+        if(id == 0)
+            sudahLewat = false;
+        else
+            sudahLewat2 = false;
     }
 
     if(!sudahLewat){
 //        printf("zA: %f\tz0: %f\n",ceil(zA),theLine["z0"]);
         if(xA<=theLine["x1"] && xA>=theLine["x0"] && zA>=theLine["z0"] && zA<=theLine["z1"]){
-            sudahLewat = true;
+            if(id == 0)
+                sudahLewat = true;
+            else
+                sudahLewat2 = true;
             return true;
         }
     }else{
         return false;
     }
-
+//
     return false;
 }
+

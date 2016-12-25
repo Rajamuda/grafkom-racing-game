@@ -13,6 +13,7 @@
 #define EXIT_C   20
 
 #define F_LINE   21
+#define SKOR     22
 
 
 GLMmodel* porsche = NULL;
@@ -29,12 +30,6 @@ void glTga(void){
     loadTGA("texture/perempatan.tga",2);
 
     /*Load Skybox*/
-//    loadTGA("texture/skybox/sincity_ft.tga",SKYFRONT);
-//    loadTGA("texture/skybox/sincity_bk.tga",SKYBACK);
-//    loadTGA("texture/skybox/sincity_lf.tga",SKYLEFT);
-//    loadTGA("texture/skybox/sincity_rt.tga",SKYRIGHT);
-//    loadTGA("texture/skybox/sincity_up.tga",SKYUP);
-//    loadTGA("texture/skybox/sincity_dn.tga",SKYDOWN);
     loadTGA("texture/skybox2/deception_pass_ft.tga",SKYFRONT);
     loadTGA("texture/skybox2/deception_pass_bk.tga",SKYBACK);
     loadTGA("texture/skybox2/deception_pass_lf.tga",SKYLEFT);
@@ -57,7 +52,8 @@ void glTga(void){
     loadTGA("texture/count/3.tga", 17);
     loadTGA("texture/count/4.tga", 18);
 
-    loadTGA("texture/garis.tga", F_LINE);
+    loadTGA("texture/garis2.tga", F_LINE);
+    loadTGA("texture/skor.tga", SKOR);
 }
 
 void loadMenu(){

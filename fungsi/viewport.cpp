@@ -1,5 +1,4 @@
-
-void viewportMobil(GLFWwindow* window){
+void viewportMobilP(GLFWwindow* window){
     glfwGetFramebufferSize(window, &widthWindow, &heightWindow);
     glViewport(0, 0, widthWindow, heightWindow);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -11,6 +10,34 @@ void viewportMobil(GLFWwindow* window){
     glLoadIdentity();
 
     setCamera();
+}
+
+void viewportMobil1P(GLFWwindow* window){
+    glfwGetFramebufferSize(window, &widthWindow, &heightWindow);
+    glViewport(0, 0, widthWindow/2, heightWindow);
+//    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    gluPerspective(90,0.5,1,2000);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    setCamera();
+}
+
+void viewportMobil2P(GLFWwindow* window){
+    glfwGetFramebufferSize(window, &widthWindow, &heightWindow);
+    glViewport(widthWindow/2, 0, widthWindow/2, heightWindow);
+//    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    gluPerspective(90,0.5,1,2000);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    setCamera2();
 }
 
 void viewportMap(GLFWwindow* window){
@@ -28,10 +55,10 @@ void viewportMap(GLFWwindow* window){
 	gluLookAt(0,350,0, 0,0,-20, 0, 20, 0);
 }
 
-void viewportStart(GLFWwindow* window, float xPos, float yPos){
-    glClear(GL_DEPTH_BUFFER_BIT);
+void viewportStart(GLFWwindow* window, float xPos, float yPos, float xSize, float ySize){
+//    glClear(GL_DEPTH_BUFFER_BIT);
     glfwGetFramebufferSize(window, &widthWindow, &heightWindow);
-    glViewport(xPos, yPos, 200, 200);
+    glViewport(xPos, yPos, xSize, ySize);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-widthWindow/(double)2, widthWindow/(double)2, -heightWindow/(double)2, heightWindow/(double)2, 1.f, -1.f); // f itu float, bisa diganti jadi 1.0float
@@ -57,7 +84,7 @@ void viewportMenu(GLFWwindow* window){
 
 GLFWwindow* createWindow(){
 //    if(fullScreen == 'Y' || fullScreen == 'y')
-//        return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", glfwGetPrimaryMonitor(), NULL);
+        return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", glfwGetPrimaryMonitor(), NULL);
 //    else
-        return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", NULL, NULL);
+//        return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", NULL, NULL);
 }

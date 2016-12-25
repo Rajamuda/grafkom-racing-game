@@ -137,7 +137,8 @@ void loadArea(){
 void drawSkybox(float size){
     float sizeX = size;
     float sizeZ = size;
-    float sizeY = -size+500;
+    float sizeY = -size/2;
+    float sizeYB = -2;
 
     bool b1=glIsEnabled(GL_TEXTURE_2D);	//new, we left the textures turned on, if it was turned on
 	glDisable(GL_LIGHTING);	//turn off lighting, when making the skybox
@@ -193,14 +194,14 @@ void drawSkybox(float size){
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D,SKYDOWN);
 	glBegin(GL_QUADS);			//top face
-		glTexCoord2f(1,0);
-		glVertex3f(sizeX/2,sizeY/2,sizeZ/2);
+		glTexCoord2f(25,0);
+		glVertex3f(sizeX/2,sizeYB/2,sizeZ/2);
 		glTexCoord2f(0,0);
-		glVertex3f(-sizeX/2,sizeY/2,sizeZ/2);
-		glTexCoord2f(0,1);
-		glVertex3f(-sizeX/2,sizeY/2,-sizeZ/2);
-		glTexCoord2f(1,1);
-		glVertex3f(sizeX/2,sizeY/2,-sizeZ/2);
+		glVertex3f(-sizeX/2,sizeYB/2,sizeZ/2);
+		glTexCoord2f(0,25);
+		glVertex3f(-sizeX/2,sizeYB/2,-sizeZ/2);
+		glTexCoord2f(25,25);
+		glVertex3f(sizeX/2,sizeYB/2,-sizeZ/2);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D,SKYUP);
 	glBegin(GL_QUADS);
@@ -218,4 +219,58 @@ void drawSkybox(float size){
 	glEnable(GL_DEPTH_TEST);
 	if(!b1)
 		glDisable(GL_TEXTURE_2D);
+}
+
+void drawCube()
+{
+    GLfloat vertices[] =
+    {
+        -1, -1, -1,   -1, -1,  1,   -1,  1,  1,   -1,  1, -1,
+        1, -1, -1,    1, -1,  1,    1,  1,  1,    1,  1, -1,
+        -1, -1, -1,   -1, -1,  1,    1, -1,  1,    1, -1, -1,
+        -1,  1, -1,   -1,  1,  1,    1,  1,  1,    1,  1, -1,
+        -1, -1, -1,   -1,  1, -1,    1,  1, -1,    1, -1, -1,
+        -1, -1,  1,   -1,  1,  1,    1,  1,  1,    1, -1,  1
+    };
+
+    GLfloat texture[] =
+
+	{0.0, 0.0, // 0: left,  bottom
+
+	 1.0, 0.0, // 1: right, bottom
+
+     1.0, 1.0, // 2: right, top
+
+	 0.0, 1.0};// 3: left,  top
+
+//    GLfloat colors[] =
+//    {
+//        0, 0, 0,   0, 0, 1,   0, 1, 1,   0, 1, 0,
+//        1, 0, 0,   1, 0, 1,   1, 1, 1,   1, 1, 0,
+//        0, 0, 0,   0, 0, 1,   1, 0, 1,   1, 0, 0,
+//        0, 1, 0,   0, 1, 1,   1, 1, 1,   1, 1, 0,
+//        0, 0, 0,   0, 1, 0,   1, 1, 0,   1, 0, 0,
+//        0, 0, 1,   0, 1, 1,   1, 1, 1,   1, 0, 1
+//    };
+
+//    static float alpha = 0;
+//    //attempt to rotate cube
+//    glRotatef(alpha, 0, 1, 0);
+
+    /* We have a color array and a vertex array */
+    glEnableClientState(GL_VERTEX_ARRAY);
+//    glEnableClientState(GL_COLOR_ARRAY);
+    glBindTexture(GL_TEXTURE_2D, 10);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+	glTexCoordPointer(2, GL_FLOAT, 0, texture);
+//    glColorPointer(3, GL_FLOAT, 0, colors);
+
+    /* Send data : 24 vertices */
+    glDrawArrays(GL_QUADS, 0, 24);
+
+
+    /* Cleanup states */
+//    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+//    alpha += 1;
 }
