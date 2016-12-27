@@ -37,7 +37,13 @@ void glTga(void){
     loadTGA("texture/skybox2/deception_pass_up.tga",SKYUP);
     loadTGA("texture/skybox2/deception_pass_dn.tga",SKYDOWN);
 
-    loadTGA("texture/splash_load.tga",9);
+    loadTGA("texture/splash_load.tga",30);
+    loadTGA("texture/splash_load2.tga",31);
+    loadTGA("texture/splash_load3.tga",32);
+    loadTGA("texture/splash_load4.tga",33);
+    loadTGA("texture/splash_load5.tga",34);
+    loadTGA("texture/splash_load6.tga",35);
+    loadTGA("texture/splash_load7.tga",36);
     loadTGA("texture/bahujalan.tga",10);
 
     loadTGA("texture/menu/menu1.tga", NEW_GAME);
@@ -46,14 +52,15 @@ void glTga(void){
     loadTGA("texture/menu/menuO1.tga", CONTINUE);
     loadTGA("texture/menu/menuO2.tga", EXIT_C);
 
-    loadTGA("texture/count/GO.tga", 14);
-    loadTGA("texture/count/1.tga", 15);
-    loadTGA("texture/count/2.tga", 16);
-    loadTGA("texture/count/3.tga", 17);
-    loadTGA("texture/count/4.tga", 18);
+    loadTGA("texture/lampu/go.tga", 14);
+    loadTGA("texture/lampu/hijau.tga", 15);
+    loadTGA("texture/lampu/kuning.tga", 16);
+    loadTGA("texture/lampu/merah.tga", 17);
+    loadTGA("texture/lampu/merah.tga", 18);
 
     loadTGA("texture/garis2.tga", F_LINE);
     loadTGA("texture/skor.tga", SKOR);
+    loadTGA("texture/orang.tga", 23);
 }
 
 void loadMenu(){
@@ -81,9 +88,9 @@ void loadMenu(){
     glDisable(GL_TEXTURE_2D);
 }
 
-void loadingScreen(){
+void loadingScreen(int id){
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,9);
+    glBindTexture(GL_TEXTURE_2D,id);
 //    glColor3ub(212,0,12);
     glBegin(GL_POLYGON);
         glTexCoord2f(0,0);

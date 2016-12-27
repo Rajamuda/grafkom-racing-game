@@ -111,6 +111,23 @@ void loadArea(){
     jalanan[14].drawArena(0);
 
     /* -------------------- 5 ------------------------ */
+
+//    glEnable(GL_TEXTURE_2D);
+//    glBindTexture(GL_TEXTURE_2D,23);
+//    glPushMatrix();
+//        glBegin(GL_QUADS);
+//            glTexCoord2f(0,0);
+//            glVertex3f(16,0,-500);
+//            glTexCoord2f(0,1);
+//            glVertex3f(16,10,-500);
+//            glTexCoord2f(20,1);
+//            glVertex3f(16,10,-15);
+//            glTexCoord2f(20,0);
+//            glVertex3f(16,0,-15);
+//        glEnd();
+//    glPopMatrix();
+//    glDisable(GL_TEXTURE_2D);
+
     drawSidewalk(10,1,-10,-490,5,0.25,1,75); //1- kanan a
     drawSidewalk(-10,1,-10,-470,-5,0.25,1,75); //1 - kiri a
 

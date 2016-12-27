@@ -1,4 +1,4 @@
-double CG = 0.0856;
+double CG = 0.1256;
 bool mundur = false;
 bool mundur2 = false;
 float axisChange = 0.1589;
@@ -40,13 +40,6 @@ void cekbtn(){
 
 //    std::cout << diff << std::endl;
 
-    posZAI -= mobil[1].getAccel()*diff*sesuatu;
-    sesuatu += diff;
-
-    if(sesuatu >= 11){
-        sesuatu = 11;
-    }
-
     if(mobil[0].getSpeed()>=0 && mobil[0].getSpeed()<5){
         axisChange = 0.51890+CG;
     }
@@ -60,13 +53,13 @@ void cekbtn(){
         axisChange = 0.71738+CG;
     }
     else if(mobil[0].getSpeed()>=20 && mobil[0].getSpeed()<25){
-        axisChange = 0.78980+CG;
+        axisChange = 0.88980+CG;
     }
-    else if(mobil[0].getSpeed()>=25 && mobil[0].getSpeed()<32){
-        axisChange = 0.86980+CG;
+    else if(mobil[0].getSpeed()>=25 && mobil[0].getSpeed()<30){
+        axisChange = 1.13980+CG;
     }
-    else if(mobil[0].getSpeed()>=32){
-        axisChange = 0.94900+CG;
+    else if(mobil[0].getSpeed()>=30){
+        axisChange = 1.24918+CG;
     }
 
     if(activeKey[GLFW_KEY_UP]==0 && activeKey[GLFW_KEY_DOWN]==0){
@@ -93,15 +86,20 @@ void cekbtn(){
                 mundur = true;
             }
             moveCamera(-1,0,0,0);
-
 //            printf("(2) pressed!\n");
         }
     }
     if(activeKey[GLFW_KEY_UP]){
         moveCamera(1,0,0,0);
-        if(mobil[0].getSpeed()-mobil[0].getMaxSpeed()<0){
+        if(mundur){
+            mobil[0].setSpeed(mobil[0].getSpeed()-1);
+            if(mobil[0].getSpeed()<0){
+                mundur = false;
+            }
+        }
+        else if(mobil[0].getSpeed()-mobil[0].getMaxSpeed()<0){
             mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff, 0);
-            mundur = false;
+//            mundur = false;
         }
     }
     if(activeKey[GLFW_KEY_LEFT]){
@@ -326,10 +324,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
             if(action == GLFW_PRESS){
                 switch(key){
                     case GLFW_KEY_DOWN:
+                        mciSendString("close sfx/slip.wma", NULL,NULL,NULL);
+                        mciSendString("play sfx/slip.wma", NULL,NULL,NULL);
                         screenState++;
                         if(screenState>2) screenState = 0;
                         break;
                     case GLFW_KEY_UP:
+                        mciSendString("close sfx/slip.wma", NULL,NULL,NULL);
+                        mciSendString("play sfx/slip.wma", NULL,NULL,NULL);
                         screenState--;
                         if(screenState<0) screenState = 2;
                         break;
@@ -338,6 +340,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                             screenState = 4;
                         }else if(screenState==1){
                             //doing nothing
+                            screenState = 3;
                         }else if(screenState==2){
                             glfwSetWindowShouldClose(window, TRUE);
                         }
@@ -345,45 +348,69 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                 }
             }
             break;
+        case 3:
+                if(action == GLFW_PRESS){
+                    switch(key){
+                        case GLFW_KEY_ESCAPE:
+                            screenState = 0;
+                            break;
+                    }
+                }
         case 4:
         case 7:
             if(action == GLFW_PRESS){
                 switch(key){
                     case GLFW_KEY_UP:
                         if(!isFinish)
-                        activeKey[GLFW_KEY_UP] = 1;
+                            activeKey[GLFW_KEY_UP] = 1;
                         break;
                     case GLFW_KEY_DOWN:
                         if(!isFinish)
-                        activeKey[GLFW_KEY_DOWN] = 1;
+                            activeKey[GLFW_KEY_DOWN] = 1;
                         break;
                     case GLFW_KEY_LEFT:
                         if(!isFinish)
-                        activeKey[GLFW_KEY_LEFT] = 1;
+                            activeKey[GLFW_KEY_LEFT] = 1;
                         break;
                     case GLFW_KEY_RIGHT:
                         if(!isFinish)
-                        activeKey[GLFW_KEY_RIGHT] = 1;
+                            activeKey[GLFW_KEY_RIGHT] = 1;
                         break;
                     case GLFW_KEY_W:
                         if(!isFinish2)
-                        activeKey[GLFW_KEY_W] = 1;
+                            activeKey[GLFW_KEY_W] = 1;
                         break;
                     case GLFW_KEY_S:
                         if(!isFinish2)
-                        activeKey[GLFW_KEY_S] = 1;
+                            activeKey[GLFW_KEY_S] = 1;
                         break;
                     case GLFW_KEY_A:
                         if(!isFinish2)
-                        activeKey[GLFW_KEY_A] = 1;
+                            activeKey[GLFW_KEY_A] = 1;
                         break;
                     case GLFW_KEY_D:
                         if(!isFinish2)
-                        activeKey[GLFW_KEY_D] = 1;
+                            activeKey[GLFW_KEY_D] = 1;
+                        break;
+                    case GLFW_KEY_SPACE:
+                            activeKey[GLFW_KEY_SPACE] = 1;
+                        break;
+                    case GLFW_KEY_H:
+                        mciSendString("play sfx/horn.mp3", NULL, NULL, NULL);
                         break;
                     case GLFW_KEY_ENTER:
                         if(isFinish && screenState == 4)
                             screenState = 0;
+                        else if(isFinish && isFinish2 && screenState==7)
+                            screenState = 0;
+                        break;
+                    case GLFW_KEY_Z:
+                        playSoundNo--;
+                        if(playSoundNo<0) playSoundNo = MAX_MUSIC-1;
+                        break;
+                    case GLFW_KEY_X:
+                        playSoundNo++;
+                        if(playSoundNo>MAX_MUSIC-1) playSoundNo = 0;
                         break;
                     case GLFW_KEY_ESCAPE:
                         screenState = 5;
@@ -416,6 +443,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                     case GLFW_KEY_D:
                         activeKey[GLFW_KEY_D] = 0;
                         break;
+                    case GLFW_KEY_SPACE:
+                        activeKey[GLFW_KEY_SPACE] = 0;
+                        break;
                 }
             }
             break;
@@ -424,10 +454,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
             if(action == GLFW_PRESS){
                 switch(key){
                     case GLFW_KEY_DOWN:
+                        mciSendString("close sfx/slip.wma", NULL,NULL,NULL);
+                        mciSendString("play sfx/slip.wma", NULL,NULL,NULL);
                         screenState++;
                         if(screenState>6) screenState = 5;
                         break;
                     case GLFW_KEY_UP:
+                        mciSendString("close sfx/slip.wma", NULL,NULL,NULL);
+                        mciSendString("play sfx/slip.wma", NULL,NULL,NULL);
                         screenState--;
                         if(screenState<5) screenState = 6;
                         break;

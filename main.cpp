@@ -4,6 +4,7 @@
 #define MAX_J 15
 #define CD 5 // countdown 4-3-2-1-GO
 #define MAX_L 2
+#define MAX_MUSIC 3
 
 #include <iostream>
 #include <fstream>
@@ -46,6 +47,7 @@ bool countDown =  true;
 bool run = false;
 double start, duration, durationPassed = 0.0;
 bool isSubmit = false, printScore = false;
+int playSoundNo = 0;
 
 #include "fungsi/loadFile.cpp"
 #include "fungsi/classObj.cpp"
@@ -83,7 +85,8 @@ int main(void){
 
 //    bool countDown =  true;
     int now = 0;
-
+    int idSplash = 30;
+    double timeSplash = std::clock()/1000;
     int pY[5]={75, 50, 25, 0,-25};
     double arr[5];
     while (!glfwWindowShouldClose(window)){
@@ -93,94 +96,114 @@ int main(void){
 
 //        mciSendString("play sfx/music1.MP3", NULL, NULL, NULL);
         fpsSetting();
-        if(ticks>= (1)/animationInterval){
+        if(ticks>= (5)/animationInterval){
             switch(screenState){
                 case 0:
-                case 1:
-                case 2:
                     reset();
                     run = false;
-//                    mciSendString("play sfx/music1.MP3", NULL, NULL, NULL);
                     countDown = true; //set true for countdown
+                case 1:
+                case 2:
+                    mciSendString("close sfx/bg1.mp3", NULL, NULL, NULL);
+                    mciSendString("close sfx/bg5.mp3", NULL, NULL, NULL);
+                    mciSendString("close sfx/bg6.mp3", NULL, NULL, NULL);
+                    mciSendString("play sfx/bg2.mp3 repeat", NULL, NULL, NULL);
                     viewportMenu(window);
                     loadMenu();
                     break;
+                case 3: //about
+                    viewportMenu(window);
+
+                    break;
                 case 4:
-//                        mciSendString("stop sfx/music1.MP3", NULL, NULL, NULL);
-                        viewportMobilP(window);
-                        glHint(GLFW_CURSOR_DISABLED,GLFW_CURSOR_HIDDEN);
-                        timeElapsed = glfwGetTime();
-                        glEnable(GL_BLEND);
-                        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                        glEnable(GL_LINE_SMOOTH);
-                        glEnable(GL_POLYGON_SMOOTH);
-                        glEnable(GL_POINT_SMOOTH);
+                    mciSendString("close sfx/bg2.mp3", NULL, NULL, NULL);
+                    if(playSoundNo == 0){
+                        mciSendString("close sfx/bg1.mp3", NULL, NULL, NULL);
+                        mciSendString("close sfx/bg6.mp3", NULL, NULL, NULL);
+                        mciSendString("play sfx/bg5.mp3 repeat", NULL, NULL, NULL);
+                    }else if(playSoundNo == 1){
+                        mciSendString("close sfx/bg5.mp3", NULL, NULL, NULL);
+                        mciSendString("close sfx/bg6.mp3", NULL, NULL, NULL);
+                        mciSendString("play sfx/bg1.mp3 repeat", NULL, NULL, NULL);
+                    }else if(playSoundNo == 2){
+                        mciSendString("close sfx/bg5.mp3", NULL, NULL, NULL);
+                        mciSendString("close sfx/bg1.mp3", NULL, NULL, NULL);
+                        mciSendString("play sfx/bg6.mp3 repeat", NULL, NULL, NULL);
+                    }
+                    viewportMobilP(window);
+                    glHint(GLFW_CURSOR_DISABLED,GLFW_CURSOR_HIDDEN);
+                    timeElapsed = glfwGetTime();
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    glEnable(GL_LINE_SMOOTH);
+                    glEnable(GL_POLYGON_SMOOTH);
+                    glEnable(GL_POINT_SMOOTH);
 
-                        drawSkybox(1850.0);
-                        display();
-                        loadArea();
-                        viewportStart(window, 500, 500,200,200);
-                        if(countDown){
-                            if(now == 0){
-                                now = (int)timeElapsed;
-                            }
-                            if((int)glfwGetTime() < now+5 ){
-                                mobil[0].setSpeed(0.0);
-                                glEnable(GL_TEXTURE_2D);
-                                glBindTexture(GL_TEXTURE_2D, (now+5-(int)glfwGetTime())+13);
-                                glBegin(GL_QUADS);
-                                    glColor4f(1,1,1,0.75);
-                                    glTexCoord2f(0,0);
-                                    glVertex2f(0,0);
-                                    glTexCoord2f(0,1);
-                                    glVertex2f(0,500);
-                                    glTexCoord2f(1,1);
-                                    glVertex2f(500,500);
-                                    glTexCoord2f(1,0);
-                                    glVertex2f(500,0);
-                                glEnd();
-                                glDisable(GL_TEXTURE_2D);
-                                glColor3f(1,1,1);
-                            }
-
-                            if((int)glfwGetTime() == now+5){
-                                now = 0;  // yang ini diaktifkan kalo mau countdown ulang!
-                                countDown = false;
-                            }
+                    drawSkybox(1850.0);
+                    display();
+                    loadArea();
+                    viewportStart(window, 220, 300, 600, 250);
+                    if(countDown){
+                        mciSendString("play sfx/start.mp3", NULL,NULL,NULL);
+                        if(now == 0){
+                            now = (int)timeElapsed;
                         }
-                        if(isFinish){
-                            submitScore();
-                            viewportStart(window,0,0,1000,1000);
-                            if(!printScore){
-                                getScore(arr);
-                                printScore = true;
-
-                            }
-                            char buff[50];
-                            for(int i=0; i<5; i++){
-//                                printf("%f, %d\n", vek[i], i);
-                                snprintf(buff, sizeof(buff), "%d       %.2d:%.2d.%.3d", i+1, int(arr[i]/60), int(arr[i])%60, int(arr[i]*1000)%1000);
-                                printTxt(95,pY[i]-30,1,buff,4);
-                            }
-                            glPushMatrix();
-                                glTranslatef(-70,-120,0);
-                                glEnable(GL_TEXTURE_2D);
-                                glBindTexture(GL_TEXTURE_2D, SKOR);
-                                glBegin(GL_QUADS);
-                                    glColor4f(1,1,1,0.8);
-                                    glTexCoord2f(0,0);
-                                    glVertex2f(20,20);
-                                    glTexCoord2f(0,1);
-                                    glVertex2f(20,230);
-                                    glTexCoord2f(1,1);
-                                    glVertex2f(500,230);
-                                    glTexCoord2f(1,0);
-                                    glVertex2f(500,20);
-                                glEnd();
-                                glDisable(GL_TEXTURE_2D);
-                            glPopMatrix();
+                        if((int)glfwGetTime() < now+5 ){
+                            mobil[0].setSpeed(0.0);
+                            glEnable(GL_TEXTURE_2D);
+                            glBindTexture(GL_TEXTURE_2D, (now+5-(int)glfwGetTime())+13);
+                            glBegin(GL_QUADS);
+                                glColor4f(1,1,1,0.9);
+                                glTexCoord2f(0,0);
+                                glVertex2f(0,0);
+                                glTexCoord2f(0,1);
+                                glVertex2f(0,500);
+                                glTexCoord2f(1,1);
+                                glVertex2f(500,500);
+                                glTexCoord2f(1,0);
+                                glVertex2f(500,0);
+                            glEnd();
+                            glDisable(GL_TEXTURE_2D);
                             glColor3f(1,1,1);
                         }
+
+                        if((int)glfwGetTime() == now+5){
+                            now = 0;  // yang ini diaktifkan kalo mau countdown ulang!
+                            countDown = false;
+                        }
+                    }
+                    if(isFinish){
+                        submitScore();
+                        viewportStart(window,0,0,1000,1000);
+                        if(!printScore){
+                            getScore(arr);
+                            printScore = true;
+
+                        }
+                        char buff[50];
+                        for(int i=0; i<5; i++){
+                            snprintf(buff, sizeof(buff), "%d       %.2d:%.2d.%.3d", i+1, int(arr[i]/60), int(arr[i])%60, int(arr[i]*1000)%1000);
+                            printTxt(95,pY[i]-30,1,buff,4);
+                        }
+                        glPushMatrix();
+                            glTranslatef(-70,-120,0);
+                            glEnable(GL_TEXTURE_2D);
+                            glBindTexture(GL_TEXTURE_2D, SKOR);
+                            glBegin(GL_QUADS);
+                                glColor4f(1,1,1,0.8);
+                                glTexCoord2f(0,0);
+                                glVertex2f(20,20);
+                                glTexCoord2f(0,1);
+                                glVertex2f(20,230);
+                                glTexCoord2f(1,1);
+                                glVertex2f(500,230);
+                                glTexCoord2f(1,0);
+                                glVertex2f(500,20);
+                            glEnd();
+                            glDisable(GL_TEXTURE_2D);
+                        glPopMatrix();
+                        glColor3f(1,1,1);
+                    }
                     break;
 
                 case 5: // tampilkan menu pause!
@@ -220,7 +243,19 @@ int main(void){
 
         }else{
             viewportMenu(window);
-            loadingScreen();
+            loadingScreen(idSplash);
+            if(idSplash<=36){
+                int chSplash = (int)((std::clock()/1000)-timeSplash);
+                timeSplash = std::clock()/1000;
+
+                if(chSplash==1) chSplash = 2;
+
+                idSplash += chSplash;
+            }else{
+                idSplash = 30;
+            }
+            if(ticks>= (2)/animationInterval)
+                mciSendString("play sfx/load.wav", NULL, NULL, NULL);
         }
 
 
