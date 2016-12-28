@@ -48,6 +48,7 @@ bool run = false;
 double start, duration, durationPassed = 0.0;
 bool isSubmit = false, printScore = false;
 int playSoundNo = 0;
+int maxLap = 1;
 
 #include "fungsi/loadFile.cpp"
 #include "fungsi/classObj.cpp"
@@ -178,7 +179,6 @@ int main(void){
                         if(!printScore){
                             getScore(arr);
                             printScore = true;
-
                         }
                         char buff[50];
                         for(int i=0; i<5; i++){

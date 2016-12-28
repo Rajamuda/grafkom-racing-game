@@ -26,7 +26,7 @@ void moveCamera(int h_direction, int v_direction, int leftorRight, float ang) {
         y = coy;
         z = coz;
     }else{
-        mobil[0].setSpeed(0.0);
+        mobil[0].setSpeed(mobil[0].getSpeed()-0.025, 1);
         printf("berada di luar wilayah!\n");
     }
 
@@ -34,7 +34,7 @@ void moveCamera(int h_direction, int v_direction, int leftorRight, float ang) {
 //        if(mobil[0].getLap()1)
         int lapE = mobil[0].getLap()+1;
 
-        if(lapE <= MAX_L){
+        if(lapE <= maxLap){
             printf("Melewati garis gan!\n");
             mobil[0].setLap(lapE);
         }else{
@@ -43,7 +43,7 @@ void moveCamera(int h_direction, int v_direction, int leftorRight, float ang) {
     }else if(isFinish){
         if(mobil[0].getSpeed()>0){
             activeKey[GLFW_KEY_DOWN] = 0;
-            activeKey[GLFW_KEY_UP] = activeKey[GLFW_KEY_LEFT] = activeKey[GLFW_KEY_RIGHT] =0;
+            activeKey[GLFW_KEY_UP] = activeKey[GLFW_KEY_LEFT] = activeKey[GLFW_KEY_RIGHT] = 0;
         }else{
             mobil[0].setSpeed(0.0);
         }

@@ -1,0 +1,20 @@
+Turbo Rush, merupakan game balapan 'time trial' yaitu kamu harus mengenderai mobilmu secepat mungkin ke garis finish.
+
+[How to Install]
+>> Cukup klik 2x 'main.exe'. Voila!, game siap untuk dimainkan.
+
+[Keyboard control]
+KeyUp	 : Maju/Gas
+KeyDown	 : Mundur/Rem
+KeyLeft	 : Stir ke kiri
+KeyRight : Stir ke kanan
+H	 : Klakson
+Z atau X : Mengganti lagu
+
+[Kontributor]
+1. Fadhlal K. Surado
+   - Logika permainan 
+2. Respati Widrantara Putra
+   - Texturing
+3. Fahrendy Rizki Nasution
+   - Musik dan efek suara

@@ -133,189 +133,6 @@ void cekbtn(){
 
 }
 
-void cekbtn2(){
-    bool backward = false;
-    float angleChange = sin(axisChange*PI/180);
-    bool backward2 = false;
-    float angleChange2 = sin(axisChange2*PI/180);
-    double timeNow = glfwGetTime();
-    double diff = timeNow - timeElapsed;
-    float c = 1.22879;
-
-    if(mobil[0].getSpeed()>=0 && mobil[0].getSpeed()<5){
-        axisChange = 0.51890+CG+c;
-    }
-    else if(mobil[0].getSpeed()>=5 && mobil[0].getSpeed()<10){
-        axisChange = 0.55670+CG+c;
-    }
-    else if(mobil[0].getSpeed()>=10 && mobil[0].getSpeed()<15){
-        axisChange = 0.67889+CG+c;
-    }
-    else if(mobil[0].getSpeed()>=15 && mobil[0].getSpeed()<20){
-        axisChange = 0.71738+CG+c;
-    }
-    else if(mobil[0].getSpeed()>=20 && mobil[0].getSpeed()<25){
-        axisChange = 0.78980+CG+c;
-    }
-    else if(mobil[0].getSpeed()>=25 && mobil[0].getSpeed()<32){
-        axisChange = 0.86980+CG+c;
-    }
-    else if(mobil[0].getSpeed()>=32){
-        axisChange = 0.94900+CG+c;
-    }
-
-    if(mobil[1].getSpeed()>=0 && mobil[1].getSpeed()<5){
-        axisChange2 = 0.51890+CG+c;
-    }
-    else if(mobil[1].getSpeed()>=5 && mobil[1].getSpeed()<10){
-        axisChange2 = 0.55670+CG+c;
-    }
-    else if(mobil[1].getSpeed()>=10 && mobil[1].getSpeed()<15){
-        axisChange2 = 0.67889+CG+c;
-    }
-    else if(mobil[1].getSpeed()>=15 && mobil[1].getSpeed()<20){
-        axisChange2 = 0.71738+CG+c;
-    }
-    else if(mobil[1].getSpeed()>=20 && mobil[1].getSpeed()<25){
-        axisChange2 = 0.78980+CG+c;
-    }
-    else if(mobil[1].getSpeed()>=25 && mobil[1].getSpeed()<32){
-        axisChange2 = 0.86980+CG+c;
-    }
-    else if(mobil[1].getSpeed()>=32){
-        axisChange2 = 0.94900+CG+c;
-    }
-
-    if(activeKey[GLFW_KEY_UP]==0 && activeKey[GLFW_KEY_DOWN]==0){
-        if(mobil[0].getSpeed()>0){
-            mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*(diff*mobil[0].getBreaking())*0.01,1);
-            if(!mundur){
-                moveCamera(1,0,0,0);
-            }else{
-                moveCamera(-1,0,0,0);
-            }
-        }else{
-            mobil[0].setSpeed(0.0);
-        }
-    }
-
-    if(activeKey[GLFW_KEY_DOWN]){
-        if(mobil[0].getSpeed()>0 && !mundur){
-            moveCamera(1,0,0,0);
-            mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*(diff*mobil[0].getBreaking())*0.01,1);
-//            printf("(1) pressed!\n");
-        }else{
-            if(mobil[0].getSpeed()-mobil[0].getMaxSpeed()<0){
-                mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.01, 0);
-                mundur = true;
-            }
-            moveCamera(-1,0,0,0);
-
-//            printf("(2) pressed!\n");
-        }
-    }
-    if(activeKey[GLFW_KEY_UP]){
-        moveCamera(1,0,0,0);
-        if(mobil[0].getSpeed()-mobil[0].getMaxSpeed()<0){
-            mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.01, 0);
-            mundur = false;
-        }
-    }
-    if(activeKey[GLFW_KEY_LEFT]){
-        if(mobil[0].getSpeed()>0.5){
-            if(!mundur){
-                cameraAngle -= angleChange;
-                ax += axisChange;
-            }else{
-                cameraAngle += angleChange;
-                ax -= axisChange;
-            }
-            if(mobil[0].getSpeed()>1 && !mundur)
-                mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.0001,1);
-            moveCamera(0,0,1,cameraAngle);
-        }
-    }
-    if(activeKey[GLFW_KEY_RIGHT]){
-        if(mobil[0].getSpeed()>0.5){
-            if(!mundur){
-                cameraAngle += angleChange;
-                ax -= axisChange;
-            }else{
-                cameraAngle -= angleChange;
-                ax += axisChange;
-            }
-            if(mobil[0].getSpeed()>1 && !mundur)
-                mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.0001,1);
-            moveCamera(0,0,-1, cameraAngle);
-        }
-    }
-
-    if(activeKey[GLFW_KEY_W]==0 && activeKey[GLFW_KEY_S]==0){
-        if(mobil[1].getSpeed()>0){
-            mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*(diff*mobil[1].getBreaking())*0.01,1);
-            if(!mundur2){
-                moveCamera2(1,0,0,0);
-            }else{
-                moveCamera2(-1,0,0,0);
-            }
-        }else{
-            mobil[1].setSpeed(0.0);
-        }
-    }
-
-    if(activeKey[GLFW_KEY_S]){
-        if(mobil[1].getSpeed()>0 && !mundur2){
-            moveCamera2(1,0,0,0);
-            mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*(diff*mobil[1].getBreaking())*0.01,1);
-//            printf("(1) pressed!\n");
-        }else{
-            if(mobil[1].getSpeed()-mobil[1].getMaxSpeed()<0){
-                mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.01, 0);
-                mundur2 = true;
-            }
-            moveCamera2(-1,0,0,0);
-
-//            printf("(2) pressed!\n");
-        }
-    }
-    if(activeKey[GLFW_KEY_W]){
-        moveCamera2(1,0,0,0);
-        if(mobil[1].getSpeed()-mobil[1].getMaxSpeed()<0){
-            mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.01, 0);
-            mundur2 = false;
-        }
-    }
-    if(activeKey[GLFW_KEY_A]){
-        if(mobil[1].getSpeed()>0.5){
-            if(!mundur2){
-                cameraAngle2 -= angleChange2;
-                ax2 += axisChange2;
-            }else{
-                cameraAngle2 += angleChange2;
-                ax2 -= axisChange2;
-            }
-            if(mobil[1].getSpeed()>1 && !mundur2)
-                mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.0001,1);
-            moveCamera2(0,0,1,cameraAngle2);
-        }
-    }
-    if(activeKey[GLFW_KEY_D]){
-        if(mobil[1].getSpeed()>0.5){
-            if(!mundur2){
-                cameraAngle2 += angleChange2;
-                ax2 -= axisChange2;
-            }else{
-                cameraAngle2 -= angleChange2;
-                ax2 += axisChange2;
-            }
-            if(mobil[1].getSpeed()>1 && !mundur2)
-                mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.0001,1);
-            moveCamera2(0,0,-1, cameraAngle2);
-        }
-    }
-
-}
-
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     switch(screenState){
         case 0:
@@ -348,7 +165,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                 }
             }
             break;
-        case 3:
+        case 3: //about
                 if(action == GLFW_PRESS){
                     switch(key){
                         case GLFW_KEY_ESCAPE:
@@ -478,3 +295,186 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 
 }
+
+// void cekbtn2(){
+//     bool backward = false;
+//     float angleChange = sin(axisChange*PI/180);
+//     bool backward2 = false;
+//     float angleChange2 = sin(axisChange2*PI/180);
+//     double timeNow = glfwGetTime();
+//     double diff = timeNow - timeElapsed;
+//     float c = 1.22879;
+
+//     if(mobil[0].getSpeed()>=0 && mobil[0].getSpeed()<5){
+//         axisChange = 0.51890+CG+c;
+//     }
+//     else if(mobil[0].getSpeed()>=5 && mobil[0].getSpeed()<10){
+//         axisChange = 0.55670+CG+c;
+//     }
+//     else if(mobil[0].getSpeed()>=10 && mobil[0].getSpeed()<15){
+//         axisChange = 0.67889+CG+c;
+//     }
+//     else if(mobil[0].getSpeed()>=15 && mobil[0].getSpeed()<20){
+//         axisChange = 0.71738+CG+c;
+//     }
+//     else if(mobil[0].getSpeed()>=20 && mobil[0].getSpeed()<25){
+//         axisChange = 0.78980+CG+c;
+//     }
+//     else if(mobil[0].getSpeed()>=25 && mobil[0].getSpeed()<32){
+//         axisChange = 0.86980+CG+c;
+//     }
+//     else if(mobil[0].getSpeed()>=32){
+//         axisChange = 0.94900+CG+c;
+//     }
+
+//     if(mobil[1].getSpeed()>=0 && mobil[1].getSpeed()<5){
+//         axisChange2 = 0.51890+CG+c;
+//     }
+//     else if(mobil[1].getSpeed()>=5 && mobil[1].getSpeed()<10){
+//         axisChange2 = 0.55670+CG+c;
+//     }
+//     else if(mobil[1].getSpeed()>=10 && mobil[1].getSpeed()<15){
+//         axisChange2 = 0.67889+CG+c;
+//     }
+//     else if(mobil[1].getSpeed()>=15 && mobil[1].getSpeed()<20){
+//         axisChange2 = 0.71738+CG+c;
+//     }
+//     else if(mobil[1].getSpeed()>=20 && mobil[1].getSpeed()<25){
+//         axisChange2 = 0.78980+CG+c;
+//     }
+//     else if(mobil[1].getSpeed()>=25 && mobil[1].getSpeed()<32){
+//         axisChange2 = 0.86980+CG+c;
+//     }
+//     else if(mobil[1].getSpeed()>=32){
+//         axisChange2 = 0.94900+CG+c;
+//     }
+
+//     if(activeKey[GLFW_KEY_UP]==0 && activeKey[GLFW_KEY_DOWN]==0){
+//         if(mobil[0].getSpeed()>0){
+//             mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*(diff*mobil[0].getBreaking())*0.01,1);
+//             if(!mundur){
+//                 moveCamera(1,0,0,0);
+//             }else{
+//                 moveCamera(-1,0,0,0);
+//             }
+//         }else{
+//             mobil[0].setSpeed(0.0);
+//         }
+//     }
+
+//     if(activeKey[GLFW_KEY_DOWN]){
+//         if(mobil[0].getSpeed()>0 && !mundur){
+//             moveCamera(1,0,0,0);
+//             mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*(diff*mobil[0].getBreaking())*0.01,1);
+// //            printf("(1) pressed!\n");
+//         }else{
+//             if(mobil[0].getSpeed()-mobil[0].getMaxSpeed()<0){
+//                 mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.01, 0);
+//                 mundur = true;
+//             }
+//             moveCamera(-1,0,0,0);
+
+// //            printf("(2) pressed!\n");
+//         }
+//     }
+//     if(activeKey[GLFW_KEY_UP]){
+//         moveCamera(1,0,0,0);
+//         if(mobil[0].getSpeed()-mobil[0].getMaxSpeed()<0){
+//             mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.01, 0);
+//             mundur = false;
+//         }
+//     }
+//     if(activeKey[GLFW_KEY_LEFT]){
+//         if(mobil[0].getSpeed()>0.5){
+//             if(!mundur){
+//                 cameraAngle -= angleChange;
+//                 ax += axisChange;
+//             }else{
+//                 cameraAngle += angleChange;
+//                 ax -= axisChange;
+//             }
+//             if(mobil[0].getSpeed()>1 && !mundur)
+//                 mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.0001,1);
+//             moveCamera(0,0,1,cameraAngle);
+//         }
+//     }
+//     if(activeKey[GLFW_KEY_RIGHT]){
+//         if(mobil[0].getSpeed()>0.5){
+//             if(!mundur){
+//                 cameraAngle += angleChange;
+//                 ax -= axisChange;
+//             }else{
+//                 cameraAngle -= angleChange;
+//                 ax += axisChange;
+//             }
+//             if(mobil[0].getSpeed()>1 && !mundur)
+//                 mobil[0].setSpeed((mobil[0].getAccel()/mobil[0].getWeight())*diff*0.0001,1);
+//             moveCamera(0,0,-1, cameraAngle);
+//         }
+//     }
+
+//     if(activeKey[GLFW_KEY_W]==0 && activeKey[GLFW_KEY_S]==0){
+//         if(mobil[1].getSpeed()>0){
+//             mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*(diff*mobil[1].getBreaking())*0.01,1);
+//             if(!mundur2){
+//                 moveCamera2(1,0,0,0);
+//             }else{
+//                 moveCamera2(-1,0,0,0);
+//             }
+//         }else{
+//             mobil[1].setSpeed(0.0);
+//         }
+//     }
+
+//     if(activeKey[GLFW_KEY_S]){
+//         if(mobil[1].getSpeed()>0 && !mundur2){
+//             moveCamera2(1,0,0,0);
+//             mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*(diff*mobil[1].getBreaking())*0.01,1);
+// //            printf("(1) pressed!\n");
+//         }else{
+//             if(mobil[1].getSpeed()-mobil[1].getMaxSpeed()<0){
+//                 mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.01, 0);
+//                 mundur2 = true;
+//             }
+//             moveCamera2(-1,0,0,0);
+
+// //            printf("(2) pressed!\n");
+//         }
+//     }
+//     if(activeKey[GLFW_KEY_W]){
+//         moveCamera2(1,0,0,0);
+//         if(mobil[1].getSpeed()-mobil[1].getMaxSpeed()<0){
+//             mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.01, 0);
+//             mundur2 = false;
+//         }
+//     }
+//     if(activeKey[GLFW_KEY_A]){
+//         if(mobil[1].getSpeed()>0.5){
+//             if(!mundur2){
+//                 cameraAngle2 -= angleChange2;
+//                 ax2 += axisChange2;
+//             }else{
+//                 cameraAngle2 += angleChange2;
+//                 ax2 -= axisChange2;
+//             }
+//             if(mobil[1].getSpeed()>1 && !mundur2)
+//                 mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.0001,1);
+//             moveCamera2(0,0,1,cameraAngle2);
+//         }
+//     }
+//     if(activeKey[GLFW_KEY_D]){
+//         if(mobil[1].getSpeed()>0.5){
+//             if(!mundur2){
+//                 cameraAngle2 += angleChange2;
+//                 ax2 -= axisChange2;
+//             }else{
+//                 cameraAngle2 -= angleChange2;
+//                 ax2 += axisChange2;
+//             }
+//             if(mobil[1].getSpeed()>1 && !mundur2)
+//                 mobil[1].setSpeed((mobil[1].getAccel()/mobil[1].getWeight())*diff*0.0001,1);
+//             moveCamera2(0,0,-1, cameraAngle2);
+//         }
+//     }
+
+// }

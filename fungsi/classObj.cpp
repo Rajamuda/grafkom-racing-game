@@ -1,7 +1,3 @@
-class Kamera{
-    //untuk kamera tiap mobil
-};
-
 class Mobil{
     float p, l, t;
     float weight;

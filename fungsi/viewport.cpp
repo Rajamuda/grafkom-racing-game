@@ -84,7 +84,7 @@ void viewportMenu(GLFWwindow* window){
 
 GLFWwindow* createWindow(){
 //    if(fullScreen == 'Y' || fullScreen == 'y')
-        return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", glfwGetPrimaryMonitor(), NULL);
+         return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", glfwGetPrimaryMonitor(), NULL);
 //    else
-//        return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", NULL, NULL);
+//       return glfwCreateWindow(widthWindow, heightWindow, "Glu Tag Racing", NULL, NULL);
 }
